@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+    "http://struts.apache.org/dtds/struts-2.3.dtd">
+    <struts>
+    <!-- 限制上传照片的大小 -->
+    <constant name="struts.multipart.maxSize" value="9000000" />
+    <package name="user" namespace="/" extends="struts-default" >
+    <interceptors>
+	    <!-- 1.注册拦截器 -->
+	    <!-- <interceptor name="LoginInterceptor" class="web.interceptor.LoginInterceptor"></interceptor> -->
+	    <!-- 2.注册拦截器栈 -->
+	    <interceptor-stack name="myStack">
+	    	<!-- 1.自定义拦截器引入（建议放在20个默认拦截器前 -->
+	    	<!-- <interceptor-ref name="LoginInterceptor">
+	    		<param name="excludeMethods">login,add</param>
+	    	</interceptor-ref> -->
+	    	<!-- 2.引入默认的20个拦截器 -->
+	    	<interceptor-ref name="defaultStack"></interceptor-ref>
+	    </interceptor-stack>
+    </interceptors>
+    
+    <!-- 3.指定默认拦截器栈 -->
+    <default-interceptor-ref name="myStack"></default-interceptor-ref>
+    <!-- 指定全局结果集  -->
+    <global-results>
+    	<result name="toLogin" type="redirect">/login.html</result>
+    </global-results>
+		<action name="user_*" class="userAction" method="{1}" ></action>
+		<action name="suggest_*" class="suggestAction" method="{1}" ></action>
+		<action name="Talk_*" class="talktAction" method="{1}" ></action>
+		<action name="TalkCollect_*" class="collectAction" method="{1}" ></action>
+		<action name="ReplyTalk_*" class="replyAction" method="{1}" ></action>
+		<action name="activity_*" class="activityAction" method="{1}" ></action>
+		<action name="view_*" class="viewAction" method="{1}" ></action>
+		<action name="upload_*" class="uploadAction" method="{1}" >
+			<result name="toList">xk.html</result>
+		</action>
+		<action name="list_*" class="listAction" method="{1}" >
+			<result name="toListjy">/xk/listjy.jsp</result>
+			<result name="toListcx">/xk/listcx.jsp</result>
+			<result name="toListzd">/xk/listzd.jsp</result>
+			<result name="toListjc">/xk/listjc.jsp</result>
+		</action>
+		<action name="download_*" class="downloadAction" method="{1}" >
+			<result type="stream" name="success">
+				<!-- 指定下载文件的MIME类型 --> 
+				<param name="contentType">${contentType}</param>
+				<!-- 指定文件下载时，浏览器处理文件的方式 -->  
+				<param name="contentDisposition">attachment;filename=${fileName}</param>
+				<!-- 指定有当前Action 中的哪个方法返回数据流 --> 
+				<param name="inputName">fileInputStream</param>
+				<!--指定下载文件的缓冲大小-->
+				<param name="bufferSize">4096</param>
+			</result>
+		</action>
+		
+	</package>
+	
+	<!-- 引入其他struts配置文件 -->
+	<!-- <include file="cn/itheima/b_dynamic/struts.xml"></include>
+	<include file="cn/itheima/c_default/struts.xml"></include> -->
+    </struts>
+   

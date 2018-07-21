@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 导入约束    复制library->web app libraries->hibernate_core-5.0.7.final.jar->hibernate-mapping-3.0.dtd -->
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+ <hibernate-mapping package="pojo">
+
+	<class name="suggest" table="suggest" >
+		<id name="suggest_id"  >
+			<generator class="native"></generator>
+		</id>
+		<property name="use_id" column="use_id" ></property>
+		<property name="suggestcontent" column="suggestcontent" ></property>
+		<property name="suggesttime" column="suggesttime" ></property>
+	</class>
+ </hibernate-mapping>

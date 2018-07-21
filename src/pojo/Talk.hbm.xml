@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+    
+ <hibernate-mapping package="pojo">
+	<class name="Talk" table="talk" >
+		<id name="talk_id"  >
+			<generator class="native"></generator>
+		</id>
+		<property name="use_id" column="use_id" ></property>
+		<property name="talktime" column="talktime" ></property>
+		<property name="talkcontent" column="talkcontent" ></property>
+		<property name="talkphoto" column="talkphoto" ></property>
+	</class>
+ </hibernate-mapping>

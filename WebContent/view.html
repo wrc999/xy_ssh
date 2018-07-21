@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>享悦管理</title>
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <link rel="Shortcut Icon" href="images/xy.ico">
+  <link rel="stylesheet" href="layui/css/layui.css"  media="all">
+<style>
+ 	img{
+ 		width: 28%;
+ 		height: 90%;
+ 	}
+ 	#toolbar{
+ 	padding: 1%;}
+</style>
+</head>
+<body>
+	<div class="layui-layout layui-layout-admin">
+  <div class="layui-header">
+    <div class="layui-logo"><img src="images/logo.png">享悦</div>
+    <!-- 头部区域（可配合layui已有的水平导航） -->
+    <ul class="layui-nav layui-layout-right">
+      <li class="layui-nav-item"><a href="">控制台</a></li>
+      <li class="layui-nav-item"><a href="">商品管理</a></li>
+      <li class="layui-nav-item"><a href="">用户</a></li>
+      <li class="layui-nav-item">
+        <a href="javascript:;">其它系统</a>
+        <dl class="layui-nav-child">
+          <dd><a href="">邮件管理</a></dd>
+          <dd><a href="">消息管理</a></dd>
+          <dd><a href="">授权管理</a></dd>
+        </dl>
+      </li>
+      <li class="layui-nav-item">
+        <a href="javascript:;"><img src="http://p9sertmb8.bkt.clouddn.com/userHeadPic/20180628145059" class="layui-nav-img">贤心 </a>
+        <dl class="layui-nav-child">
+          <dd><a href="">基本资料</a></dd>
+          <dd><a href="">安全设置</a></dd>
+          <dd><a href="">退了</a></dd>
+        </dl>
+      </li>
+    </ul>
+  </div>
+  
+  <div class="layui-side layui-bg-black">
+    <div class="layui-side-scroll">
+      <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+      <ul class="layui-nav layui-nav-tree"  lay-filter="test">
+        <li class="layui-nav-item layui-nav-itemed">
+          <a class="" href="javascript:;">信息管理</a>
+          <dl class="layui-nav-child">
+            <dd><a href="javascript:;">用户管理</a></dd>
+            <dd><a href="javascript:;">分享管理</a></dd>
+            <dd><a href="javascript:;">图片管理</a></dd>
+            <dd><a href="javascript:;">活动管理</a></dd>
+          </dl>
+        </li>
+        <li class="layui-nav-item">
+          <a href="javascript:;">系统管理</a>
+          <dl class="layui-nav-child">
+            <dd><a href="javascript:;">用户管理</a></dd>
+            <dd><a href="javascript:;">权限管理</a></dd>
+            <dd><a href="javascript:;">角色管理</a></dd>
+          </dl>
+        </li>
+        <li class="layui-nav-item"><a href="">用户建议</a></li>
+      </ul>
+    </div>
+  </div>
+  
+  <div class="layui-body">
+	<div id="toolbar">
+		<!-- autocomplete代表是否让浏览器自动记录之前输入的值 -->
+		<input class="layui-textbox" placeholder="请输入账号名进行搜索" autocomplete="off" id="keyword">
+  		<a class="layui-btn layui-btn-warm layui-btn-xs layui-icon layui-icon-search" data-type="look" >搜索</a>
+  		<a class="layui-btn layui-btn-normal layui-btn-xs layui-icon layui-icon-edit" data-type="edit">编辑</a>
+  		<a class="layui-btn layui-btn-xs layui-icon layui-icon-add-1" data-type="add">添加</a>
+  		<a class="layui-btn layui-btn-danger layui-btn-xs layui-icon layui-icon-close" data-type="del">删除</a>
+	</div>
+	<table class="layui-table" id="table" lay-data="{url:'/xy_ssh/user_adminGet'
+										  			,method: 'post'
+										  			,cellMinWidth:80
+										  			,fit:true
+													,page:true
+											  		,limits:[10,30,50,100]
+											  		,height:'full-200'
+	  												,id:'idTest'}" 
+	  		lay-filter="demo">
+		<thead>
+		    <tr>
+		      <th lay-data="{type:'checkbox'}"></th>
+		      <th lay-data="{field:'use_id',width:80,sort:true}">ID</th>
+		      <th lay-data="{field:'account', width:80}">用户名</th>
+		      <th lay-data="{field:'passWord', width:80, sort: true}">密码</th>
+		      <th lay-data="{field:'avaPath', width:80}">头像地址</th>
+		      <th lay-data="{field:'nickName', width: 100}">昵称</th>
+		      <th lay-data="{field:'birth', sort: true}" readonly="true">生日</th>
+		      <th lay-data="{field:'sex', sort: true}">性别</th>
+		      <th lay-data="{field:'school'}">学校</th>
+		      <th lay-data="{field:'academy',sort: true}">学院</th>
+		      <th lay-data="{field:'major'}">专业</th>
+		      <th lay-data="{field:'entryYear'}" readonly="true">入学年份</th>
+		      <th lay-data="{field:'perSign'}">个性签名</th>
+		      <th lay-data="{field:'hobby'}">兴趣爱好</th>
+		      <th lay-data="{field:'homeTown'}">家乡</th>
+		    </tr>
+		  </thead>
+	</table>
+  </div>
+  <div class="layui-footer">
+    <!-- 底部固定区域 -->
+    Copyright &copy; 2015-2010 享悦 版权所有
+  </div>
+</div>
+<div id="editDialog" style="display:none;">
+	<form class="layui-form" lay-filter="userInfo" method="post">
+    		<input name="use_id" id="use_id" type="hidden">
+		<div class="layui-form-item">
+		    <label class="layui-form-label">用户名：</label>
+		    <div class="layui-input-block">
+		      <input name="account" id="account" class="layui-input" style="width:60%">
+		    </div>
+		</div>
+		<div class="layui-form-item">
+		    <label class="layui-form-label">密码：</label>
+		    <div class="layui-input-block">
+		      <input name="passWord" id="passWord" class="layui-input" style="width:60%">
+		    </div>
+		</div>
+		<div class="layui-form-item">
+		    <label class="layui-form-label">头像地址：</label>
+		    <div class="layui-input-block">
+		      <input name="avaPath" id="avaPath" class="layui-input" style="width:60%">
+		    </div>
+		</div>
+		<div class="layui-form-item">
+		    <label class="layui-form-label"> 昵称：</label>
+		    <div class="layui-input-block">
+		      <input name="nickName" id="nickName" class="layui-input" style="width:60%">
+		    </div>
+		</div> 
+		<div class="layui-form-item">
+		    <label class="layui-form-label">生日：</label>
+		    <div class="layui-input-block">
+		      <input name="birth" id="birth" readonly="true" class="layui-input date" style="width:60%" placeholder="yyyy-MM-dd">
+		    </div>
+		</div>
+		<div class="layui-form-item">
+		    <label class="layui-form-label">性别：</label>
+		    <div class="layui-input-block">
+		      <input type="radio" name="sex" value="男" title="男" checked="">
+      		  <input type="radio" name="sex" value="女" title="女">
+		    </div>
+		</div>    
+		<div class="layui-form-item">
+		    <label class="layui-form-label">学校：</label>
+		    <div class="layui-input-block">
+		      <input name="school" id="school" class="layui-input" style="width:60%">
+		    </div>
+		</div> 
+		<div class="layui-form-item">
+		    <label class="layui-form-label">学院：</label>
+		    <div class="layui-input-block">
+		      <input name="academy" id="academy" class="layui-input" style="width:60%">
+		    </div>
+		</div>
+		<div class="layui-form-item">
+		    <label class="layui-form-label">专业：</label>
+		    <div class="layui-input-block">
+		      <input name="major" id="major" class="layui-input" style="width:60%">
+		    </div>
+		</div>         
+		<div class="layui-form-item">
+		    <label class="layui-form-label">入学时间：</label>
+		    <div class="layui-input-block">
+		      <input name="entryYear" id="entryYear" readonly="true" class="layui-input date" style="width:60%" placeholder="yyyy-MM-dd">
+		    </div>
+		</div> 
+		<div class="layui-form-item">
+		    <label class="layui-form-label">个人签名：</label>
+		    <div class="layui-input-block">
+		      <input name="perSign" id="perSign" class="layui-input" style="width:60%">
+		    </div>
+		</div>
+		<div class="layui-form-item">
+		    <label class="layui-form-label">兴趣爱好：</label>
+		    <div class="layui-input-block">
+		      <input name="hobby" id="hobby" class="layui-input" style="width:60%">
+		    </div>
+		</div>         
+		<div class="layui-form-item">
+		    <label class="layui-form-label">家乡：</label>
+		    <div class="layui-input-block">
+		      <input name="homeTown" id="homeTown" class="layui-input" style="width:60%">
+		    </div>
+		</div>              
+  </form>
+</div>
+<script src="layui/layui.js" charset="utf-8"></script>
+<script>
+	layui.use(['table','element','laydate','form'], function(){
+		//左侧导航栏收缩
+		var element = layui.element;
+		//初始化日期
+		var laydate = layui.laydate;
+		//初始化表单
+		var form = layui.form;
+		//同时绑定多个
+		  lay('.date').each(function(){
+		    laydate.render({
+		      elem: this
+		      ,trigger: 'click'
+		      ,theme: 'molv'
+		    });
+		  });
+		//初始数据表格（方法渲染）
+  		var table = layui.table;
+  		var $ = layui.$;
+  	  	active = {
+		 look: function(){ //获取选中数据
+	 	     var info = $("#keyword").val();
+	 	     table.reload('idTest', {
+	 	    	 url:'/xy_ssh/user_adminGet'
+	 	    	  ,where: { //设定异步数据接口的额外参数，任意设
+	 	    		 condition: info
+	 	    	  }
+	 	    	  ,page: {
+	 	    	    curr: 1 //重新从第 1 页开始
+	 	    	  }
+	 	    	});
+	 	    }
+  	    ,add: function(){ //添加数据
+  	    	//初始化弹出框数据
+  	    	form.val("userInfo", {
+   	    	 "use_id":null
+   	    	,"account": null
+   	    	,"passWord": null
+   	  		,"avaPath":null
+   	  		,"nickName":null
+   	  		,"birth":null
+   	  		,"sex":null
+   	  		,"school":null
+   	  		,"academy":null
+   	  		,"major":null
+   	  		,"entryYear":null
+   	  		,"perSign":null
+   	  		,"hobby":null
+   	  		,"homeTown":null
+   	    	});
+  	    	layer.open({
+	          type: 1
+	          ,title: "添加账户" //不显示标题栏
+	          ,closeBtn: 2
+	          ,area: ['30%', '80%']
+	          ,shade: 0.6
+	          ,id: 'LAY_layuipro' //设定一个id，防止重复弹出
+	          ,btn: ['添加', '取消']
+	          ,btnAlign: 'c'//按钮居中
+	          ,moveType: 0 //拖拽模式，0或者1
+	          ,content: $('#editDialog')
+	          ,success: function(layero){
+	            var btn = layero.find('.layui-layer-btn');
+	            btn.find('.layui-layer-btn0').on('click', function(){
+	            	var account = $("#account").val();
+	            	var passWord = $("#passWord").val();
+	            	var nickName = $("#nickName").val();
+	            	var birth = $("#birth").val();
+	            	var sex = $("input[type='radio']:checked").val()
+	            	var school = $("#school").val();
+	            	var academy = $("#academy").val();
+	            	var major = $("#major").val();
+	            	var entryYear = $("#entryYear").val();
+	            	var perSign = $("#perSign").val();
+	            	var hobby = $("#hobby").val();
+	            	var homeTown = $("#homeTown").val();
+	            	var avaPath = $("#avaPath").val();
+	            	$.post(
+	            			"/xy_ssh/user_add",
+	            	        {
+	            			 account:account,
+	            			 passWord:passWord,
+	            			 nickName:nickName,
+	            			 birth:birth,
+	            			 sex:sex,
+	            			 school:school,
+	            			 academy:academy,
+	            			 major:major,
+	            			 entryYear:entryYear,
+	            			 perSign:perSign,
+	            			 hobby:hobby,
+	            			 homeTown:homeTown,
+	            			 avaPath:avaPath,
+	            				},
+	            	        function(result){
+	            	          table.reload('idTest',{})          
+	            	          layer.msg('添加成功')
+	            	      });
+	        	  });
+	          }
+	        });
+  	    }
+  	    ,edit: function(){ //修改选中数据
+  	    	var checkStatus = table.checkStatus('idTest');
+    	      var data = checkStatus.data;
+    	      if(data.length==0){
+    	    	  layer.msg("不选择修改用户你让我如何编辑哟")
+    	      }else if(data.length>1){
+    	    	  layer.msg("请不要多选哟")
+    	      }else{
+    	    	  form.val("userInfo", {
+    	    	    	 "use_id":data[0].use_id
+    	    	    	,"account": data[0].account
+    	    	    	,"passWord": data[0].passWord
+    	    	  		,"avaPath":data[0].avaPath
+    	    	  		,"nickName":data[0].nickName
+    	    	  		,"birth":data[0].birth
+    	    	  		,"sex":data[0].sex
+    	    	  		,"school":data[0].school
+    	    	  		,"academy":data[0].academy
+    	    	  		,"major":data[0].major
+    	    	  		,"entryYear":data[0].entryYear
+    	    	  		,"perSign":data[0].perSign
+    	    	  		,"hobby":data[0].hobby
+    	    	  		,"homeTown":data[0].homeTown
+    	    	    	});
+    	  	    	layer.open({
+    	  	          type: 1
+    	  	          ,title: "修改用户信息" //不显示标题栏
+    	  	          ,closeBtn: 2
+    	  	          ,area: ['30%', '80%']
+    	  	          ,shade: 0.6
+    	  	          ,id: 'LAY_layuipro' //设定一个id，防止重复弹出
+    	  	          ,btn: ['保存', '取消']
+    	  	          ,btnAlign: 'c'//按钮居中
+    	  	          ,moveType: 0 //拖拽模式，0或者1
+    	  	          ,content: $('#editDialog')
+    	  	          ,success: function(layero){
+    	  	            var btn = layero.find('.layui-layer-btn');
+    	  	            btn.find('.layui-layer-btn0').on('click', function(){
+    	  	            	var use_id = $("#use_id").val();
+    	  	            	var account = $("#account").val();
+    	  	            	var passWord = $("#passWord").val();
+    	  	            	var nickName = $("#nickName").val();
+    	  	            	var birth = $("#birth").val();
+    	  	            	var sex = $("input[type='radio']:checked").val()
+    	  	            	var school = $("#school").val();
+    	  	            	var academy = $("#academy").val();
+    	  	            	var major = $("#major").val();
+    	  	            	var entryYear = $("#entryYear").val();
+    	  	            	var perSign = $("#perSign").val();
+    	  	            	var hobby = $("#hobby").val();
+    	  	            	var homeTown = $("#homeTown").val();
+    	  	            	var avaPath = $("#avaPath").val();
+    	  	            	$.post(
+    	  	            			"/xy_ssh/user_edit",
+    	  	            	        {use_id:use_id,
+    	  	            			 account:account,
+    	  	            			 passWord:passWord,
+    	  	            			 nickName:nickName,
+    	  	            			 birth:birth,
+    	  	            			 sex:sex,
+    	  	            			 school:school,
+    	  	            			 academy:academy,
+    	  	            			 major:major,
+    	  	            			 entryYear:entryYear,
+    	  	            			 perSign:perSign,
+    	  	            			 hobby:hobby,
+    	  	            			 homeTown:homeTown,
+    	  	            			 avaPath:avaPath,
+    	  	            				},
+    	  	            	        function(result){
+    	  	            	          table.reload('idTest',{})          
+    	  	            	          layer.msg('保存修改成功')
+    	  	            	      });
+    	  	        	  });
+    	  	          }
+    	  	        });
+    	      }
+    	      
+  	    }
+  	    ,del: function(){ //删除选中数据
+  	    	var checkStatus = table.checkStatus('idTest');
+    	    var data = checkStatus.data;
+    	    //判断用户选择了多少行
+    	    if(data.length==0){
+    	    	layer.msg("请选择删除哪一行哟");
+    	    }else{
+    	    	//多行删除
+    	    	for(var i=0;i<data.length;i++){
+		    	    var use_id = data[i].use_id;
+		    	    $.post(
+		          			"/xy_ssh/user_delete",
+		          	        {use_id:use_id,
+		          				},
+		          	        function(result){
+		          	          table.reload('idTest',{});          
+		          	      });
+    	    	}
+		          	layer.msg("已删除"+data.length+"个用户");
+    	    }
+  	    },
+  	  };
+  	  
+  	  $('#toolbar .layui-btn').on('click', function(){
+  	    var type = $(this).data('type');
+  	    active[type] ? active[type].call(this) : '';
+  	  });
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:aop="http://www.springframework.org/schema/aop"
+	   xmlns:context="http://www.springframework.org/schema/context"
+	   xmlns:tx="http://www.springframework.org/schema/tx"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
+	   					   http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.2.xsd 
+	   					   http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.2.xsd
+	   					   http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.2.xsd ">
+	
+	<!-- 读取db.properties文件 -->
+	<context:property-placeholder location="classpath:db.properties" />
+	<!-- 配置c3p0连接池 -->
+	<bean name="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" >
+		<property name="jdbcUrl" value="${jdbc.jdbcUrl}" ></property>
+		<property name="driverClass" value="${jdbc.driverClass}" ></property>
+		<property name="user" value="${jdbc.user}" ></property>
+		<property name="password" value="${jdbc.password}" ></property>
+	</bean>
+	
+	<!-- 核心事务管理器 -->
+	<bean name="transactionManager" class="org.springframework.orm.hibernate5.HibernateTransactionManager" >
+		<property name="sessionFactory" ref="sessionFactory" ></property>
+	</bean>
+	<!-- <tx:advice id="txAdvice" transaction-manager="transactionManager" >
+		<tx:attributes>
+			<tx:method name="saveUser" isolation="REPEATABLE_READ" propagation="REQUIRED" read-only="false" />
+		</tx:attributes>
+	</tx:advice>
+	<aop:config>
+		<aop:pointcut expression="execution(* serviceDao.user.userServiceDao.*(..))" id="txPc"/>
+		<aop:advisor advice-ref="txAdvice" pointcut-ref="txPc" />
+	</aop:config> -->
+	<!-- 1.Spring通常会默认使用JDK代理模式这样的弊端是很显然的，返回对象必须是接口 -->
+	<!-- 2.默认使用CGLIB代理（设为true） -->
+	<aop:aspectj-autoproxy  proxy-target-class="true"/>
+	<!-- 开启注解事务 -->
+	<tx:annotation-driven transaction-manager="transactionManager" />
+	
+	<!-- 将SessionFactory配置到spring容器中 -->
+	<bean name="sessionFactory" class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
+		<!-- 将连接池注入到sessionFactory, hibernate会通过连接池获得连接 -->
+		<property name="dataSource" ref="dataSource" ></property>
+		<!-- 配置hibernate基本信息 -->
+		<property name="hibernateProperties">
+			<props>
+				<!--  必选配置 -->
+				<prop key="hibernate.dialect" >org.hibernate.dialect.MySQLDialect</prop>
+				<!-- <prop key="connection.useUnicode" >true</prop>
+				<prop key="connection.characterEncoding" >UTF-8</prop> -->
+				
+				<!--  可选配置 -->
+				<prop key="hibernate.show_sql" >true</prop>
+				<prop key="hibernate.format_sql" >true</prop>
+				<prop key="hibernate.hbm2ddl.auto" >update</prop>
+			</props>
+		</property>
+		<!-- 引入orm元数据,指定orm元数据所在的包路径,spring会自动读取包中的所有配置 -->
+		<property name="mappingDirectoryLocations" value="classpath:pojo" ></property>
+	</bean>
+	
+	<!-- 配置action -->
+	<bean name="userAction" class="web.action.user" scope="prototype">
+		<property name="useSD" ref="useSD"></property>
+	</bean>
+	<bean name="suggestAction" class="web.action.suggestion" scope="prototype">
+		<property name="useSD" ref="useSD"></property>
+	</bean>
+	<bean name="talktAction" class="web.action.talk" scope="prototype">
+		<property name="talkSD" ref="talkSD"></property>
+	</bean>
+	<bean name="collectAction" class="web.action.collection" scope="prototype">
+		<property name="talkSD" ref="talkSD"></property>
+	</bean>
+	<bean name="replyAction" class="web.action.reply" scope="prototype">
+		<property name="replySD" ref="replySD"></property>
+	</bean>
+	<bean name="uploadAction" class="web.action.xk.upload" scope="prototype"></bean>
+	<bean name="listAction" class="web.action.xk.list" scope="prototype"></bean>
+	<bean name="downloadAction" class="web.action.xk.download" scope="prototype"></bean>
+	
+	<bean name="activityAction" class="web.action.Activity" scope="prototype">
+		<property name="activitySD" ref="activitySD"></property>
+	</bean>
+	<bean name="viewAction" class="web.action.View" scope="prototype">
+		<property name="vS" ref="vS"></property>
+	</bean>
+	
+	<!-- 配置Service -->
+	<bean name="useSD" class="serviceDao.user.userServiceDao">
+		<property name="userDao" ref="userDao"></property></bean>
+	<bean name="talkSD" class="serviceDao.talk.talkServiceDao">
+		<property name="talkDao" ref="talkDao"></property>
+	</bean>
+	<bean name="replySD" class="serviceDao.replyTalk.replyTalkServiceDao">
+		<property name="replyDao" ref="replyDao"></property>
+	</bean>
+	<bean name="activitySD" class="serviceDao.activity.activityService">
+		<property name="activityDao" ref="activityDao"></property>
+	</bean>
+	<bean name="vS" class="serviceDao.view.viewService">
+		<property name="vD" ref="vD"></property>
+	</bean>
+	
+	<!-- 配置dao -->
+	<bean name="userDao" class="dao.user.userDao">
+		<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+	<bean name="talkDao" class="dao.talk.talkDao">
+		<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+	<bean name="replyDao" class="dao.replyTalk.replyTalkDao">
+		<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+	<bean name="activityDao" class="dao.activity.activityDao">
+		<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+	<bean name="vD" class="dao.view.viewDao">
+		<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+</beans>

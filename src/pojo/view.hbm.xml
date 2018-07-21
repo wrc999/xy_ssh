@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+    
+ <hibernate-mapping package="pojo">
+	<class name="view" table="view" >
+		<id name="view_id"  >
+			<generator class="native"></generator>
+		</id>
+		<property name="use_id" column="use_id" ></property>
+		<property name="photo" column="photo" ></property>
+		<property name="school" column="school" ></property>
+		<property name="uploadTime" column="uploadTime" ></property>
+	</class>
+ </hibernate-mapping>
