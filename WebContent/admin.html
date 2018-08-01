@@ -104,13 +104,12 @@
 				      element.tabAdd('tab', {
 				        title: '用户信息管理' //用于演示
 				        ,content: '<iframe src="talk.html" scrolling="no" style="width:100%;height:475px;border:0;" ></iframe>'
-						,id: "user" 
+						,id: 'user' 
 				      })
 				      element.tabChange('tab', 'user');
 				}else{
 					//存在，跳转界面
 					element.tabChange('tab', 'user');
-					//刷新数据
 				}
 		    },
 		    talk: function(){
